@@ -1,0 +1,275 @@
+\documentclass[12pt,leqno]{article}
+
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{logicproof}
+
+\setlength{\textheight}{9.1in}
+\setlength{\topmargin}{-.1in}
+\setlength{\headsep}{0in}
+\setlength{\oddsidemargin}{-.1in}
+\setlength{\textwidth}{6.5in}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+% for logicproof
+\setlength{\subproofhorizspace}{.5em}
+\setlength{\intersubproofvertspace}{.5em}
+
+% proof rules
+\newcommand{\Intro}[1]{{#1}{\text{I}}}
+\newcommand{\Elim}[1]{{#1}{\text{E}}}
+\newcommand{\ElimA}[1]{{#1}{\text{E}_1}}
+\newcommand{\ElimB}[1]{{#1}{\text{E}_2}}
+
+% truth tables
+\newcommand{\T}{\mathtt{T}}
+\newcommand{\F}{\mathtt{F}}
+
+\title{CS 511 Homework \#1}
+\author{Anthony DeRossi}
+\date{12 Sep 2024}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+
+[LCS, page 79]: Exercise 1.2.1, parts (h), (i), (j)
+
+Prove the validity of the following sequents:
+
+\begin{itemize}
+
+\item[(h)] $p \vdash (p \to q) \to q$
+
+\begin{logicproof}{1}
+  p                & premise \\
+  \begin{subproof}
+    p \to q        & assumption \\
+    q              & $\Elim{\to}$ 2, 1
+  \end{subproof}
+  (p \to q) \to q  & $\Intro{\to}$ 2--3
+\end{logicproof}
+
+\item[(i)] $(p \to r) \land (q \to r) \vdash p \land q \to r$
+
+\begin{logicproof}{2}
+  (p \to r) \land (q \to r)  & premise \\
+  p \to r                    & $\ElimA{\land}$ 1 \\
+  \begin{subproof}
+    p \land q                & assumption \\
+    p                        & $\ElimA{\land}$ 3 \\
+    r                        & $\Elim{\to}$ 2, 4
+  \end{subproof}
+  p \land q \to r            & $\Intro{\to}$ 3--5
+\end{logicproof}
+
+\newpage
+\item[(j)] $q \to r \vdash (p \to q) \to (p \to r)$
+
+\begin{logicproof}{3}
+  q \to r                  & premise \\
+  \begin{subproof}
+    p \to q                & assumption \\
+    \begin{subproof}
+      p                    & assumption \\
+      q                    & $\Elim{\to}$ 2, 3 \\
+      r                    & $\Elim{\to}$ 1, 4
+    \end{subproof}
+    p \to r                & $\Intro{\to}$ 3--5
+  \end{subproof}
+  (p \to q) \to (p \to r)  & $\Intro{\to}$ 2--6
+\end{logicproof}
+
+\end{itemize}
+
+\section*{Exercise 2}
+
+[LCS, page 84]: Exercise 1.4.2, parts (g), (h), (i)
+
+Compute the truth table of the formula
+
+\begin{itemize}
+
+\item[(g)] $((p \to q) \to p) \to p$
+
+\[
+\begin{array}{ c | c || c | c | c }
+  p & q & p \to q & (p \to q) \to p & ((p \to q) \to p) \to p \\
+\hline
+  \T & \T & \T & \T & \T \\
+\hline
+  \T & \F & \F & \T & \T \\
+\hline
+  \F & \T & \T & \F & \T \\
+\hline
+  \F & \F & \T & \F & \T \\
+\end{array}
+\]
+\medskip
+
+\item[(h)] $((p \lor q) \to r) \to ((p \to r) \lor (q \to r))$
+
+\[
+\begin{array}{ c | c | c || c | c | c | c | c | c }
+  & & & & & & & & ((p \lor q) \to r) \to \\
+  p & q & r & p \lor q & p \to r & q \to r & (p \lor q) \to r &
+    (p \to r) \lor (q \to r) & ((p \to r) \lor (q \to r)) \\
+\hline
+  \T & \T & \T & \T & \T & \T & \T & \T & \T \\
+\hline
+  \T & \T & \F & \T & \F & \F & \F & \F & \T \\
+\hline
+  \T & \F & \T & \T & \T & \T & \T & \T & \T \\
+\hline
+  \T & \F & \F & \T & \F & \T & \F & \T & \T \\
+\hline
+  \F & \T & \T & \T & \T & \T & \T & \T & \T \\
+\hline
+  \F & \T & \F & \T & \T & \F & \F & \T & \T \\
+\hline
+  \F & \F & \T & \F & \T & \T & \T & \T & \T \\
+\hline
+  \F & \F & \F & \F & \T & \T & \T & \T & \T \\
+\end{array}
+\]
+\medskip
+
+\newpage
+\item[(i)] $(p \to q) \to (\lnot p \to \lnot q)$
+
+\[
+\begin{array}{ c | c || c | c | c | c | c }
+  p & q & \lnot p & \lnot q & p \to q & \lnot p \to \lnot q &
+    (p \to q) \to (\lnot p \to \lnot q) \\
+\hline
+  \T & \T & \F & \F & \T & \T & \T \\
+\hline
+  \T & \F & \F & \T & \F & \T & \T \\
+\hline
+  \F & \T & \T & \F & \T & \F & \F \\
+\hline
+  \F & \F & \T & \T & \T & \T & \T \\
+\end{array}
+\]
+\medskip
+
+\end{itemize}
+
+\section*{Problem 1}
+
+[LCS, page 87]: Exercise 1.5.3, parts (b), (c)
+
+An adequate set of connectives for propositional logic is a set such that for
+every formula of propositional logic there is an equivalent formula with only
+connectives from that set. For example, the set $\{\lnot, \lor\}$ is adequate
+for propositional logic, because any occurrence of $\land$ and $\to$ can be
+removed by using the equivalences $\phi \to \psi \equiv \lnot \phi \lor \psi$
+and $\phi \land \psi \equiv \lnot (\lnot \phi \lor \lnot \psi)$.
+
+\begin{itemize}
+
+\item[(b)] Show that, if $C \subseteq \{\lnot, \land, \lor, \to, \bot\}$ is
+adequate for propositional logic, then $\lnot \in C$ or $\bot \in C$. (Hint:
+suppose $C$ contains neither $\lnot$ nor $\bot$ and consider the truth value
+of a formula $\phi$, formed by using only the connectives in $C$, for a
+valuation in which every atom is assigned $\T$.)
+
+\medskip
+Suppose $C \equiv \{\land, \lor, \to\}$. For $C$ to form an adequate set of
+connectives it is enough to show that $\lnot$ and $\bot$ can be defined using
+the connectives in $C$.
+
+However, we can see from the truth table that a formula $\phi$ formed using
+only the connectives in $C$ cannot be used to define $\lnot$.
+
+\[
+\begin{array}{ c || c | c | c }
+  \phi & \phi \land \phi & \phi \lor \phi & \phi \to \phi \\
+\hline
+  \T & \T & \T & \T \\
+\hline
+  \F & \F & \F & \T \\
+\end{array}
+\]
+\medskip
+
+When $\phi$ is $\T$ it is not possible to write a formula logically equivalent
+to $\lnot \phi$, since all combinations of connectives are $\T$.
+
+\newpage
+\item[(c)] Is $\{\leftrightarrow, \lnot\}$ adequate? Prove your answer.
+
+\medskip
+No.
+
+We can prove by induction that a formula using these connectives cannot be
+logically equivalent to the formula $\phi \land \psi$ using the property that
+all truth tables contain the same number of $\T$ and $\F$ entries.
+
+\begin{center}
+\begin{minipage}{.4\linewidth}
+  \[
+  \begin{array}{ c | c || c | c }
+    \phi & \psi & \lnot \phi & \phi \leftrightarrow \psi \\
+  \hline
+    \T & \T & \F & \T \\
+  \hline
+    \T & \F & \F & \F \\
+  \hline
+    \F & \T & \T & \F \\
+  \hline
+    \F & \F & \T & \T \\
+  \end{array}
+  \]
+  \medskip
+\end{minipage}
+\quad
+\begin{minipage}{.4\linewidth}
+  \[
+  \begin{array}{ c | c || c }
+    \phi & \psi & \phi \land \psi \\
+  \hline
+    \T & \T & \T \\
+  \hline
+    \T & \F & \F \\
+  \hline
+    \F & \T & \F \\
+  \hline
+    \F & \F & \F \\
+  \end{array}
+  \]
+  \medskip
+\end{minipage}
+\end{center}
+
+For the base case we observe that every formula of two propositional variables
+has the same number of $\T$ and $\F$ entries.
+
+Assume a formula $\phi_i$ is represented by a column of the truth table. We
+can extend this formula by one connective to produce a formula $\phi_{i+1}$
+which is also represented by a column of the truth table. By induction the
+property holds for every formula.
+
+The truth table for $\phi \land \psi$ contains a single $\T$, therefore it is
+not possible to construct a logically equivalent formula using only the
+connectives $\leftrightarrow$ and $\lnot$.
+
+\end{itemize}
+
+\vspace{3\baselineskip}
+\hrule
+
+Solutions to the Lean 4 exercises are available on GitHub:
+
+\url{https://github.com/anthonyde/math2001/blob/cs511-fall2024/Math2001/CS511_Homework/hw1.lean}
+
+\section*{Exercise 3}
+
+\section*{Exercise 4}
+
+\section*{Problem 2}
+
+\end{document}
