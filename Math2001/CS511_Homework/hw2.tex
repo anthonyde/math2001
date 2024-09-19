@@ -1,0 +1,199 @@
+\documentclass[12pt,leqno]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{logicproof}
+
+\setlength{\textheight}{9.1in}
+\setlength{\topmargin}{-.1in}
+\setlength{\headsep}{0in}
+\setlength{\oddsidemargin}{-.1in}
+\setlength{\textwidth}{6.5in}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+% for logicproof
+\setlength{\subproofhorizspace}{.5em}
+\setlength{\intersubproofvertspace}{.5em}
+
+% custom symbols
+\newcommand{\DefEq}{\stackrel{\text{def}}{=}}
+
+% proof rules
+\newcommand{\Intro}[1]{{#1}{\text{I}}}
+\newcommand{\Elim}[1]{{#1}{\text{E}}}
+\newcommand{\ElimA}[1]{{#1}{\text{E}_1}}
+\newcommand{\ElimB}[1]{{#1}{\text{E}_2}}
+
+% truth tables
+\newcommand{\T}{\mathtt{T}}
+\newcommand{\F}{\mathtt{F}}
+
+\title{CS 511 Homework \#2}
+\author{Anthony DeRossi}
+\date{19 Sep 2024}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+
+Go to page 9 in \textbf{\textit{Lecture Slides 06}}. Your task is to carefully
+write all the details of the proof by \textit{structural induction}.
+
+\medskip
+Proposition: For all strings $s, t \in A^*$, it holds that $\text{reverse}(s
+\cdot t) = \text{reverse}(t) \cdot \text{reverse}(s)$.
+
+Proof: Use structural induction on $t \in A^*$ to prove the property $P(t)$
+defined by:
+\[
+  P(t) \DefEq \text{``for all $s \in A^*$ it holds that
+    $\text{reverse}(s \cdot t) = \text{reverse}(t) \cdot \text{reverse}(s)$''}
+\]
+
+\medskip
+Base case: $t = \varepsilon$
+\[
+  P(\varepsilon) \DefEq \text{``for all $s \in A^*$ it holds
+    that $\text{reverse}(s \cdot \varepsilon) = \text{reverse}(\varepsilon)
+    \cdot \text{reverse}(s)$''}
+\]
+
+\begin{enumerate}
+\item $\text{reverse}(s \cdot \varepsilon) = \text{reverse}(\varepsilon)
+  \cdot \text{reverse}(s)$
+\end{enumerate}
+
+By $\text{reverse}(\varepsilon) \DefEq \varepsilon$,
+
+\begin{enumerate}[resume]
+\item $\text{reverse}(s \cdot \varepsilon) = \varepsilon \cdot
+  \text{reverse}(s)$
+\end{enumerate}
+
+By the definition $\text{reverse}(s \cdot x) \DefEq x \cdot
+\text{reverse}(s)$, $P(\varepsilon)$ holds.
+
+\newpage
+Inductive step: $t = y \cdot x$ where $x \in A$, $P(y) \to P(y \cdot x)$
+\[
+  P(y \cdot x) \DefEq \text{``for all $s \in A^*$ it holds
+    that $\text{reverse}(s \cdot (y \cdot x)) = \text{reverse}(y \cdot x)
+    \cdot \text{reverse}(s)$''}
+\]
+
+\begin{enumerate}
+\item $\text{reverse}(s \cdot (y \cdot x)) = \text{reverse}(y \cdot x)
+  \cdot \text{reverse}(s)$
+\end{enumerate}
+
+By the associative property of $\cdot$,
+
+\begin{enumerate}[resume]
+\item $\text{reverse}(s \cdot y \cdot x) = \text{reverse}(y \cdot x)
+  \cdot \text{reverse}(s)$
+\end{enumerate}
+
+By $\text{reverse}(s \cdot x) \DefEq x \cdot \text{reverse}(s)$,
+
+\begin{enumerate}[resume]
+\item $x \cdot \text{reverse}(s \cdot y) = x \cdot \text{reverse}(y)
+  \cdot \text{reverse}(s)$
+\end{enumerate}
+
+By the inductive hypothesis, $P(y)$,
+
+\begin{enumerate}[resume]
+\item $x \cdot \text{reverse}(y) \cdot \text{reverse}(s) = x \cdot
+  \text{reverse}(y) \cdot \text{reverse}(s)$
+\end{enumerate}
+
+By the reflexive property, $P(y \cdot x)$ holds.
+
+By structural induction, $P(t)$ holds. \hfill $\square$
+
+\section*{Exercise 2}
+
+[LCS, page 87]: Exercise 1.4.15
+
+Use mathematical induction on $n$ to prove the theorem $(
+  (\phi_1 \land (\phi_2 \land (\ldots \land \phi_n) \ldots) \to \psi)
+    \to (\phi_1 \to (\phi_2 \to (\ldots (\phi_n \to \psi) \ldots)))
+)$.
+
+\medskip
+Using natural deduction for $n = 2$ as a proof template:
+
+\begin{logicproof}{3}
+  \begin{subproof}
+    (\phi_1 \land \phi_2) \to \psi & assumption \\
+    \begin{subproof}
+      \phi_1                       & assumption \\
+      \begin{subproof}
+        \phi_2                     & assumption \\
+        \phi_1 \land \phi_2        & $\Intro{\land}$ 2, 3 \\
+        \psi                       & $\Elim{\to}$ 1, 4
+      \end{subproof}
+      \phi_2 \to \psi              & $\Intro{\to}$ 3--5
+    \end{subproof}
+    \phi_1 \to (\phi_2 \to \psi)   & $\Intro{\to}$ 2--6
+  \end{subproof}
+  (\phi_1 \land \phi_2) \to \psi) \to (\phi_1 \to (\phi_2 \to \psi))
+    & $\Intro{\to}$ 1--7
+\end{logicproof}
+
+\medskip
+For the inductive proof we can recursively apply $\Intro{\to}$ until reaching
+the premise $\phi_n$, then $\Intro{\land}$ $n - 1$ times to produce
+$\phi_1 \land (\phi_2 \land (\ldots \land \phi_n) \ldots)$, then $\Elim{\to}$
+to reach $\psi$.
+
+\begin{logicproof}{3}
+  \begin{subproof}
+    (\phi_1 \land (\phi_2 \land (\ldots \land \phi_n) \ldots)) \to \psi
+      & assumption \\
+    \begin{subproof}
+      \phi_1                               & assumption \\
+      \vdots \vdots                        & \\
+      \begin{subproof}
+        \phi_n                             & assumption \\
+        \phi_{n-1} \land \phi_n            & $\Intro{\land}$ 3, 4 \\
+        \vdots \vdots                      & \\
+        \phi_1 \land (\phi_2 \land (\ldots \land \phi_n) \ldots) & \\
+        \psi                               & $\Elim{\to}$ 1, 7
+      \end{subproof}
+      \phi_n \to \psi                      & $\Intro{\to}$ 4--8 \\
+      \vdots \vdots                        &
+    \end{subproof}
+    \phi_1 \to (\phi_2 \to (\ldots (\phi_n \to \psi) \ldots)) &
+  \end{subproof}
+  (\phi_1 \land (\phi_2 \land (\ldots \land \phi_n) \ldots) \to \psi)
+    \to (\phi_1 \to (\phi_2 \to (\ldots (\phi_n \to \psi) \ldots)))
+    & $\Intro{\to}$ 1--11
+\end{logicproof}
+
+\section*{Problem 1}
+
+Show that any of the three rules $\{(LEM), (PBC), (\lnot\lnot E)\}$ are
+interderivable.
+
+% TODO
+
+\vspace{3\baselineskip}
+\hrule
+
+Solutions to the Lean 4 exercises are available on GitHub:
+
+\url{https://github.com/anthonyde/math2001/blob/cs511-fall2024/Math2001/CS511_Homework/hw2.lean}
+
+\section*{Exercise 3}
+
+\section*{Exercise 4}
+
+\section*{Problem 2}
+
+\end{document}
