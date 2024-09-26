@@ -1,0 +1,181 @@
+\documentclass[12pt,leqno]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{logicproof}
+\usepackage{synttree}
+\usepackage{xcolor}
+
+\setlength{\textheight}{9.1in}
+\setlength{\topmargin}{-.1in}
+\setlength{\headsep}{0in}
+\setlength{\oddsidemargin}{-.1in}
+\setlength{\textwidth}{6.5in}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+% for logicproof
+\setlength{\subproofhorizspace}{.5em}
+\setlength{\intersubproofvertspace}{.5em}
+
+% custom symbols
+\newcommand{\DefEq}{\stackrel{\text{def}}{=}}
+
+% proof rules
+\newcommand{\Intro}[1]{{#1}{\text{I}}}
+\newcommand{\IntroA}[1]{{#1}{\text{I}_1}}
+\newcommand{\IntroB}[1]{{#1}{\text{I}_2}}
+\newcommand{\Elim}[1]{{#1}{\text{E}}}
+\newcommand{\ElimA}[1]{{#1}{\text{E}_1}}
+\newcommand{\ElimB}[1]{{#1}{\text{E}_2}}
+
+% truth tables
+\newcommand{\T}{\mathtt{T}}
+\newcommand{\F}{\mathtt{F}}
+
+\title{CS 511 Homework \#3}
+\author{Anthony DeRossi}
+\date{26 Sep 2024}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+
+Go to page 13 in \textbf{\textit{Lecture Slides 09}}. Your task is to carefully
+do part 1 of the exercise on that page.
+
+Write a natural-deduction proof of the following WFF:
+
+\[
+  \varphi_1 \triangleq \lnot (p \land q \land r) \to
+    (\lnot p \lor \lnot q \lor \lnot r)
+\]
+
+\newpage
+\begin{logicproof}{3}
+  \begin{subproof}
+    \lnot ((p \land q) \land r)                   & assumption \\
+    \begin{subproof}
+      \lnot ((\lnot p \lor \lnot q) \lor \lnot r) & assumption \\
+      \begin{subproof}
+        \lnot p                                   & assumption \\
+        \lnot p \lor \lnot q                      & $\IntroB{\lor}$ 3 \\
+        (\lnot p \lor \lnot q) \lor \lnot r       & $\IntroB{\lor}$ 4 \\
+        \bot                                      & $\Elim{\lnot}$ 2, 5
+      \end{subproof}
+      \lnot \lnot p                               & $\Intro{\lnot}$ 3-6 \\
+      \begin{subproof}
+        \lnot q                                   & assumption \\
+        \lnot p \lor \lnot q                      & $\IntroA{\lor}$ 8 \\
+        (\lnot p \lor \lnot q) \lor \lnot r       & $\IntroB{\lor}$ 9 \\
+        \bot                                      & $\Elim{\lnot}$ 2, 10
+      \end{subproof}
+      \lnot \lnot q                               & $\Intro{\lnot}$ 8-11 \\
+      \begin{subproof}
+        \lnot r                                   & assumption \\
+        (\lnot p \lor \lnot q) \lor \lnot r       & $\IntroA{\lor}$ 13 \\
+        \bot                                      & $\Elim{\lnot}$ 2, 14
+      \end{subproof}
+      \lnot \lnot r                               & $\Intro{\lnot}$ 13-15 \\
+      p                                           & $\Elim{\lnot\lnot}$ 7 \\
+      q                                           & $\Elim{\lnot\lnot}$ 12 \\
+      r                                           & $\Elim{\lnot\lnot}$ 16 \\
+      p \land q                                   & $\Intro{\land}$ 17, 18 \\
+      (p \land q) \land r                         & $\Intro{\land}$ 20, 19 \\
+      \bot                                        & $\Elim{\lnot}$ 1, 21
+    \end{subproof}
+    \lnot \lnot ((\lnot p \lor \lnot q) \lor \lnot r)
+      & $\Intro{\lnot}$ 2-22 \\
+    (\lnot p \lor \lnot q) \lor \lnot r           & $\Elim{\lnot\lnot}$ 23
+  \end{subproof}
+  \lnot ((p \land q) \land r) \to ((\lnot p \lor \lnot q) \lor \lnot r)
+    & $\Intro{\to}$ 1-24
+\end{logicproof}
+
+\newpage
+\section*{Exercise 2}
+
+Go to page 18 in \textbf{\textit{Lecture Slides 10}}. Your task is to carefully
+do part 1 of the exercise on that page.
+
+Use the tableaux method to show the validity of the following more general
+version of de Morgan's law:
+
+\[
+  \varphi_1 \triangleq \lnot (p \land q \land r) \to
+    (\lnot p \lor \lnot q \lor \lnot r)
+\]
+
+\medskip
+We show the formula is valid by showing that its negation is unsatisfiable:
+
+\begin{center}
+  \synttree{8 \branchheight{.3in} \childsidesep{5em} \childattachsep{1em}}
+  [ $\lnot (\lnot ((p \land q) \land r) \to
+      ((\lnot p \lor \lnot q) \lor \lnot r))$
+    [ $\lnot ((p \land q) \land r)$
+      [ $\lnot ((\lnot p \lor \lnot q) \lor \lnot r)$
+        [ $\lnot (\lnot p \lor \lnot q)$
+          [ $\lnot \lnot r$
+            [ $\lnot \lnot p$
+              [ $\lnot \lnot q$
+                [ $\color{blue} \bm r$
+                  [ $\color{green} \bm p$
+                    [ $\color{red} \bm q$
+                      [ $\lnot (p \land q)$
+                        [ $\color{green} \bm{\lnot p}$
+                          [ \sf X ]
+                        ]
+                        [ $\color{red} \bm{\lnot q}$
+                          [ \sf X ]
+                        ]
+                      ]
+                      [ $\color{blue} \bm{\lnot r}$
+                        [ \sf X ]
+                      ]
+                    ]
+                  ]
+                ]
+              ]
+            ]
+          ]
+        ]
+      ]
+    ]
+  ]
+\end{center}
+
+All paths are closed, therefore this formula is unsatisfiable and the original
+formula is valid.
+
+\newpage
+\section*{Problem 1}
+
+\begin{itemize}
+\item[(a)] Go to page 13 in \textbf{\textit{Lecture Slides 09}} once more.
+  Your task is to carefully do parts 2, 3, and 4 of the exercise on that page.
+\item[(b)] Go to page 18 in \textbf{\textit{Lecture Slides 10}} once more.
+  Your task is to carefully do parts 2, 3, and 4 of the exercise on that page.
+\end{itemize}
+
+% TODO
+
+\vspace{3\baselineskip}
+\hrule
+
+Solutions to the Lean 4 exercises are available on GitHub:
+
+\url{https://github.com/anthonyde/math2001/blob/cs511-fall2024/Math2001/CS511_Homework/hw3.lean}
+
+\section*{Exercise 3}
+
+\section*{Exercise 4}
+
+\section*{Problem 2}
+
+\end{document}
