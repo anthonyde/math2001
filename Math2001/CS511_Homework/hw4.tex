@@ -1,0 +1,275 @@
+\documentclass[12pt,leqno]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{logicproof}
+\usepackage{mathtools}
+
+\setlength{\textheight}{9.1in}
+\setlength{\topmargin}{-.1in}
+\setlength{\headsep}{0in}
+\setlength{\oddsidemargin}{-.1in}
+\setlength{\textwidth}{6.5in}
+
+\setlength{\parskip}{1em}
+\setlength{\parindent}{0pt}
+
+% for logicproof
+\setlength{\subproofhorizspace}{.5em}
+\setlength{\intersubproofvertspace}{.5em}
+
+% custom symbols
+\newcommand{\DefEq}{\stackrel{\text{def}}{=}}
+\newcommand{\Mid}{\,\middle\vert\,}
+
+% proof rules
+\newcommand{\Intro}[1]{{#1}{\text{I}}}
+\newcommand{\IntroA}[1]{{#1}{\text{I}_1}}
+\newcommand{\IntroB}[1]{{#1}{\text{I}_2}}
+\newcommand{\Elim}[1]{{#1}{\text{E}}}
+\newcommand{\ElimA}[1]{{#1}{\text{E}_1}}
+\newcommand{\ElimB}[1]{{#1}{\text{E}_2}}
+
+% truth tables
+\newcommand{\T}{\mathtt{T}}
+\newcommand{\F}{\mathtt{F}}
+
+\title{CS 511 Homework \#4}
+\author{Anthony DeRossi}
+\date{3 Oct 2024}
+
+\begin{document}
+\maketitle
+
+\section*{Exercise 1}
+
+[EML Chapter 1, page 15-16] Exercise 27, part 1
+
+The \textit{$n$-Queens Problem} is the problem of placing $n$ queens on an $n
+\times n$ chessboard so that no two queens can attack each other. In this
+exercise we specify the requirements of a solution for the $n$-Queens Problem
+as a propositional wff $\psi_n$, with one such wff for every $n \ge 4$. For
+convenience we use a set $\mathcal{Q}$ of doubly-indexed propositional
+variables, instead of $\mathcal{P}$, where the indices range over the positive
+integers:
+
+\[
+  \mathcal{Q} \DefEq \left\{q_{i, j} \Mid i, j \in
+    \left\{1, 2, \ldots\right\}\right\}
+\]
+
+The desired wff $\psi_n$ in this exercise is in
+$\mathsf{WFF_{PL}}(\mathcal{Q})$. We set the variable $q_{i, j}$ to truth
+value $true$ (resp. $false$) if there is (resp. there is not) a queen placed
+in position $(i, j)$ of the board, where we take the first index $i$ (resp.
+the second index $j$) to range over the vertical axis downward (resp. the
+horizontal axis rightward); that is, $i$ is a row number and $j$ is a column
+number.
+
+Write the wff $\psi_n$ and justify how it accomplishes its task.
+
+\newpage
+\[
+  \varphi_n = \varphi_n^{row} \land \varphi_n^{col} \land \varphi_n^{diag1}
+    \land \varphi_n^{diag2}
+\]
+
+\[
+  \varphi_n^{row} = \bigvee \left\{ q_{i, j} \land \bigwedge
+    \left\{\lnot q_{i, l} \Mid \begin{array}{c}
+      l \ne j \\
+      l \in \left\{1, \ldots, n\right\}
+    \end{array}\right\} \Mid i, j \in \left\{1, \ldots, n\right\} \right\}
+\]
+
+\[
+  \varphi_n^{col} = \bigvee \left\{ q_{i, j} \land \bigwedge
+    \left\{\lnot q_{k, j} \Mid \begin{array}{c}
+      k \ne i \\
+      k \in \left\{1, \ldots, n\right\}
+    \end{array} \right\} \Mid i, j \in \left\{1, \ldots, n\right\} \right\}
+\]
+
+\[
+  \varphi_n^{diag1} = \bigvee \left\{ q_{i, j} \land \bigwedge
+    \left\{\lnot q_{k, l} \Mid \begin{array}{c}
+      i - j = k - l \\
+      k \ne i \\
+      l \ne j \\
+      k, l \in \left\{1, \ldots, n\right\}
+    \end{array} \right\} \Mid i, j \in \left\{1, \ldots, n\right\} \right\}
+\]
+
+\[
+  \varphi_n^{diag2} = \bigvee \left\{ q_{i, j} \land \bigwedge
+    \left\{\lnot q_{k, l} \Mid \begin{array}{c}
+      i + j = k + l \\
+      k \ne i \\
+      l \ne j \\
+      k, l \in \left\{1, \ldots, n\right\}
+    \end{array} \right\} \Mid i, j \in \left\{1, \ldots, n\right\} \right\}
+\]
+
+$\varphi_n^{row}$ is satisfied iff there is exactly one queen in each row. If
+any propositional variable $q_{i, j}$ is set, then no other variable with the
+same $i$ can be set.
+
+$\varphi_n^{col}$ is based on the same principle as $\varphi_n^{row}$, but
+with exclusivity on the column $j$ instead of the row.
+
+$\varphi_n^{diag1}$ is satisfied iff there is exactly one queen in each
+diagonal. This uses the same exclusivity tactic as above, but with variables
+lying along a diagonal instead of a row or column.
+
+$\varphi_n^{diag2}$ is based on the same principle as $\varphi_n^{diag1}$, but
+with exclusivity on the antidiagonal.
+
+These four criteria are the requirements for a valid solution. If they are
+all satisfied by some assignment of propositional variables, then that
+assignment is a solution to the $n$-Queens Problem.
+
+\newpage
+\section*{Exercise 2}
+
+[Lecture Slides 13, page 19]
+
+The formal definition of substitution on page 18 can be simplified if every
+wff is such that:
+
+\begin{enumerate}
+  \item there is at most one binding occurrence for the same variable
+  \item a variable cannot have both free and bound occurrences
+\end{enumerate}
+
+Formalize this idea.
+
+\medskip
+The original wff definition, free variable function, and definition of
+substitution are as follows:
+
+\[
+  \varphi \Coloneqq \bot \mid \top \mid x \mid (\lnot \varphi) \mid
+    (\varphi \land \varphi) \mid (\varphi \lor \varphi) \mid
+    (\varphi \to \varphi) \mid (\forall x\ \varphi) \mid (\exists x\ \varphi)
+\]
+
+\[
+  FV(\varphi) = \left\{
+    \begin{array}{ll}
+    \varnothing  & \text{if $\varphi = \bot$ or $\top$} \\
+    \{x\}        & \text{if $\varphi = x$} \\
+    FV(\varphi') & \text{if $\varphi = \lnot\varphi'$} \\
+    FV(\varphi_1) \cup FV(\varphi_2) &
+      \text{if $\varphi = (\varphi_1 \star \varphi_2)$ and
+        $\star \in \{\land, \lor, \to\}$} \\
+    FV(\varphi') - \{x\} &
+      \text{if $\varphi = (\mathbf{Q}x\ \varphi')$ and
+        $\mathbf{Q} \in \{\forall, \exists\}$}
+    \end{array}
+  \right.
+\]
+
+\[
+  \varphi[u/x] = \left\{
+    \begin{array}{ll}
+    \varphi              & \text{if $\varphi = \top$ or $\bot$} \\
+    \varphi              & \text{if $\varphi = y$ and $x \ne y$} \\
+    u                    & \text{if $\varphi = y$ and $x = y$} \\
+    \lnot(\varphi'[u/x]) & \text{if $\varphi = \lnot \varphi'$} \\
+    \varphi_1[u/x] \star \varphi_2[u/x] &
+      \text{if $\varphi = \varphi_1 \star \varphi_2$ and} \\
+      & \text{$\star \in \{\land, \lor, \to\}$} \\
+    \mathbf{Q}y\ (\varphi'[u/x])
+      & \text{if $\varphi = \mathbf{Q}y\ \varphi'$} \\
+      & \text{$\mathbf{Q} \in \{\forall, \exists\}$, $x \ne y$, and} \\
+      & \text{$u$ is substitutable for $x$ in $\varphi$} \\
+    \varphi & \text{if $\varphi = \mathbf{Q}y\ \varphi'$,} \\
+      & \text{$\mathbf{Q} \in \{\forall, \exists\}$, $x = y$}
+    \end{array}
+  \right.
+\]
+
+\newpage
+To simplify the substitution definition we can use the following wff
+definition:
+
+\[
+  \begin{array}{lcll}
+  \varphi & \Coloneqq & \bot \mid \top \mid x \mid (\lnot \varphi) & \\
+    & \mid & (\varphi_1 \star \varphi_2)
+      & \text{if $\star \in \{\land, \lor, \to\}$}, \\
+    &&& BV(\varphi_1) \cap BV(\varphi_2) = \varnothing, \\
+    &&& BV(\varphi_1) \cap FV(\varphi_2) = \varnothing, \\
+    &&& FV(\varphi_1) \cap BV(\varphi_2) = \varnothing \\
+    & \mid & (\mathbf{Q}x\ \varphi)
+      & \text{if $\mathbf{Q} \in \{\forall, \exists\}$,} \\
+    &&& x \notin BV(\varphi)
+  \end{array}
+\]
+
+Where $FV(\varphi)$ has the same definition as above and the function
+$BV(\varphi)$ reflects the bound variables of a wff:
+
+\[
+  BV(\varphi) = \left\{
+    \begin{array}{ll}
+    \varnothing  & \text{if $\varphi = \bot$ or $\top$} \\
+    \varnothing  & \text{if $\varphi = x$} \\
+    BV(\varphi') & \text{if $\varphi = \lnot\varphi'$} \\
+    BV(\varphi_1) \cup BV(\varphi_2) &
+      \text{if $\varphi = (\varphi_1 \star \varphi_2)$ and
+        $\star \in \{\land, \lor, \to\}$} \\
+    BV(\varphi') \cup \{x\} &
+      \text{if $\varphi = (\mathbf{Q}x\ \varphi')$ and
+        $\mathbf{Q} \in \{\forall, \exists\}$}
+    \end{array}
+  \right.
+\]
+
+This formulation eliminates the ``substitutable'' requirement in the
+definition of substitution. Because there is only one binding occurrence for
+any given propositional variable, substitution is always valid under a binding
+if the substituted variable does not match the bound variable.
+
+\[
+  \varphi[u/x] = \left\{
+    \begin{array}{ll}
+    \varphi              & \text{if $\varphi = \top$ or $\bot$} \\
+    \varphi              & \text{if $\varphi = y$ and $x \ne y$} \\
+    u                    & \text{if $\varphi = y$ and $x = y$} \\
+    \lnot(\varphi'[u/x]) & \text{if $\varphi = \lnot \varphi'$} \\
+    \varphi_1[u/x] \star \varphi_2[u/x] &
+      \text{if $\varphi = \varphi_1 \star \varphi_2$ and} \\
+      & \text{$\star \in \{\land, \lor, \to\}$} \\
+    \mathbf{Q}y\ (\varphi'[u/x])
+      & \text{if $\varphi = \mathbf{Q}y\ \varphi'$} \\
+      & \text{$\mathbf{Q} \in \{\forall, \exists\}$, $x \ne y$} \\
+    \varphi & \text{if $\varphi = \mathbf{Q}y\ \varphi'$,} \\
+      & \text{$\mathbf{Q} \in \{\forall, \exists\}$, $x = y$}
+    \end{array}
+  \right.
+\]
+
+\newpage
+\section*{Problem 1}
+
+[EML Chapter 1, page 15-16] Exercise 27, parts 2, 3, 4
+
+% TODO
+
+\vspace{3\baselineskip}
+\hrule
+
+Solutions to the Lean 4 exercises are available on GitHub:
+
+\url{https://github.com/anthonyde/math2001/blob/cs511-fall2024/Math2001/CS511_Homework/hw4.lean}
+
+\section*{Exercise 3}
+
+\section*{Exercise 4}
+
+\section*{Problem 2}
+
+\end{document}
